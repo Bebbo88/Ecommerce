@@ -140,6 +140,7 @@ export default function Products() {
             top: 5,
             left: "75%",
             fontSize: 24,
+            border: "none",
           }}
           className={
             isInWishList(product.id)
