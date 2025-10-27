@@ -5,6 +5,7 @@ import { ForgetPasswordContext } from "../context/ForgetPasswordContext";
 
 export default function VerifyCode() {
   let { verifyCode, setStep } = useContext(ForgetPasswordContext);
+
   const [isLoading, setIsLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const [responseType, setResponseType] = useState("");
@@ -83,6 +84,9 @@ export default function VerifyCode() {
 
             <button type="submit" className="w-100 btn bg-main text-white mt-4">
               Confirm
+            </button>
+            <button type="submit" className="w-100 btn bg-main text-white mt-3">
+              Send Code Again
             </button>
           </form>
         </div>

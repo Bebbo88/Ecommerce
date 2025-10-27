@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { CategoryContext } from "../context/CategoryContext";
 import Typewriter from "typewriter-effect";
 import { Link } from "react-router-dom";

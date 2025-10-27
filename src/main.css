@@ -93,3 +93,102 @@ main {
 .style{
     color: rgba(0, 0, 0, 0.501);
 }
+
+/* Custom Pagination Styles */
+.custom-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    min-width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 12px;
+    background: white;
+    color: var(--main-text);
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(117, 52, 183, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family);
+}
+
+.pagination-btn:hover:not(.disabled):not(.active):not(.dots) {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, rgba(117,52,183,0.2), rgba(160,120,255,0.2));
+    box-shadow: 0 4px 12px rgba(117, 52, 183, 0.3);
+    color: var(--main-text);
+}
+
+.pagination-btn.active {
+    background: var(--main-color);
+    color: white;
+    box-shadow: 0 4px 16px rgba(117, 52, 183, 0.4);
+}
+
+.pagination-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #f0f0f0;
+    color: #999;
+}
+
+.pagination-btn.dots {
+    background: transparent;
+    box-shadow: none;
+    cursor: default;
+    font-size: 20px;
+    color: var(--main-text);
+}
+
+.pagination-btn.dots:hover {
+    transform: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+/* Responsive Pagination */
+@media (max-width: 768px) {
+    .pagination-btn {
+        min-width: 38px;
+        height: 38px;
+        font-size: 14px;
+    }
+    
+    .custom-pagination {
+        gap: 4px;
+    }
+}
+
+/* Active Filter Badge */
+.filter-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    background: var(--main-color);
+    color: white;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(117, 52, 183, 0.3);
+    animation: fadeIn 0.3s ease;
+    white-space: nowrap;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
