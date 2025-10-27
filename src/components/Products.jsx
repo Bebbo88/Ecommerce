@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, Links } from "react-router-dom";
 import { BounceLoader } from "react-spinners";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
@@ -10,22 +10,15 @@ import Typewriter from "typewriter-effect";
 import { WishListContext } from "../context/WishListContext";
 import { AuthContext } from "../context/AuthContext";
 
-export default function Products({
-  selectedCategory: initialSelectedCategory,
-  selectedCategoryName,
-  onClearFilter,
-}) {
+export default function Products() {
   let { token } = useContext(AuthContext);
   let { getCartIdFromServer } = useContext(CartContext);
   useEffect(() => {
     if (token) getCartIdFromServer(token);
   }, [token, getCartIdFromServer]);
   const { addToCart } = useContext(CartContext);
-  let { products, filteredProducts, isLoading, setFilteredProducts } =
-    useContext(ProductContext);
+  let { products, isLoading } = useContext(ProductContext);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 12;
   let { addItemToWishList, isPending, isAdding, deleteItemFromWishList, data } =
     useContext(WishListContext);
 
@@ -58,33 +51,6 @@ export default function Products({
     }
   } // Filter products by category for the original paginated section
 
-  useEffect(() => {
-    if (products?.length) {
-      if (initialSelectedCategory) {
-        const filtered = products.filter(
-          (product) => product.category._id === initialSelectedCategory
-        );
-        setFilteredProducts(filtered);
-      } else {
-        setFilteredProducts(products);
-      }
-      setCurrentPage(1);
-    }
-  }, [products, initialSelectedCategory, setFilteredProducts]); // Calculate pagination for original section
-
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts?.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  );
-  const totalPages = Math.ceil(filteredProducts?.length / productsPerPage);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   if (isLoading)
     return (
       <div
@@ -100,28 +66,21 @@ export default function Products({
 
   const safeProducts = products || []; // Section 1 – Featured (e.g. highly rated)
 
-  const featuredProducts = safeProducts
-    .filter((p) => p.ratingsAverage >= 4.5)
-    .slice(0, 12); // Section 2 – Trending (e.g. most sold)
+  const featuredProducts = safeProducts.slice(0, 12); // Section 2 – Trending (e.g. most sold)
 
-  const trendingProducts = safeProducts
-    .filter((p) => (p.sold || 0) > 10)
-    .slice(0, 12); // Section 3 – New Arrivals (sort by createdAt descending)
+  const trendingProducts = safeProducts.slice(13, 23); // Section 3 – New Arrivals (sort by createdAt descending)
 
   const newArrivals = [...safeProducts]
-    .filter((p) => !!p.createdAt)
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 12); // Section 4 – Electronics (category name)
+    .slice(23, 33); // Section 4 – Electronics (category name)
 
   const electronicsProducts = safeProducts
     .filter((p) => (p.category?.name || "").toLowerCase() === "electronics")
     .slice(0, 12); // Section 5 – On Sale (discount > 0)
 
-  const onSaleProducts = safeProducts
-    .filter((p) => (p.discount || 0) > 0)
-    .slice(0, 12); // Section 6 – Recommended (just a slice, or use your own logic)
+  const onSaleProducts = safeProducts.slice(33, 40); // Section 6 – Recommended (just a slice, or use your own logic)
 
-  const recommendedProducts = safeProducts.slice(0, 12); // --- END: Section Lists --- // Card rendering function: no logic changed
+  const recommendedProducts = safeProducts.slice(8, 20); // --- END: Section Lists --- // Card rendering function: no logic changed
 
   function renderProductCards(list) {
     if (!list?.length)
@@ -161,7 +120,7 @@ export default function Products({
             alt={product.title}
             style={{ borderRadius: "10px" }}
           />
-          <h3 className="font-sm text-main fw-bold">
+          <h3 className="font-sm mt-3 text-main fw-bold">
             {product.category?.name}
           </h3>
           <h3 className="h6">
@@ -262,11 +221,25 @@ export default function Products({
           <h2 style={sectionHeaderStyle}>🌟 Featured Products</h2>
           <div className="row">{renderProductCards(featuredProducts)}</div>
         </div>
+        <div className=" text-center my-5">
+          <Link to={"/allproducts"}>
+            <button className="btn bg-main text-white px-5 py-2">
+              View All Products
+            </button>
+          </Link>
+        </div>
         <hr />
         {/* Section 2: Trending Now */}
         <div id="section-trending">
           <h2 style={sectionHeaderStyle}>🔥 Trending Now</h2>
           <div className="row">{renderProductCards(trendingProducts)}</div>
+        </div>
+        <div className=" text-center my-5">
+          <Link to={"/allproducts"}>
+            <button className="btn bg-main text-white px-5 py-2">
+              View All Products
+            </button>
+          </Link>
         </div>
         <hr />
         {/* Section 3: New Arrivals */}
@@ -274,11 +247,25 @@ export default function Products({
           <h2 style={sectionHeaderStyle}>🆕 New Arrivals</h2>
           <div className="row">{renderProductCards(newArrivals)}</div>
         </div>
+        <div className=" text-center my-5">
+          <Link to={"/allproducts"}>
+            <button className="btn bg-main text-white px-5 py-2">
+              View All Products
+            </button>
+          </Link>
+        </div>
         <hr />
         {/* Section 4: Electronics */}
         <div id="section-electronics">
           <h2 style={sectionHeaderStyle}>📱 Electronics</h2>
           <div className="row">{renderProductCards(electronicsProducts)}</div>
+        </div>
+        <div className=" text-center my-5">
+          <Link to={"/allproducts"}>
+            <button className="btn bg-main text-white px-5 py-2">
+              View All Products
+            </button>
+          </Link>
         </div>
         <hr />
         {/* Section 5: On Sale */}
@@ -286,120 +273,27 @@ export default function Products({
           <h2 style={sectionHeaderStyle}>💸 On Sale</h2>
           <div className="row">{renderProductCards(onSaleProducts)}</div>
         </div>
+        <div className=" text-center my-5">
+          <Link to={"/allproducts"}>
+            <button className="btn bg-main text-white px-5 py-2">
+              View All Products
+            </button>
+          </Link>
+        </div>
         <hr />
         {/* Section 6: Recommended For You */}
         <div id="section-recommended">
           <h2 style={sectionHeaderStyle}>✨ Recommended for You</h2>
           <div className="row">{renderProductCards(recommendedProducts)}</div>
         </div>
-        <hr />
-        {/* ORIGINAL PAGINATED SECTION (your filtered category logic) */}
-        <div id="section-pagination">
-          {currentProducts?.length > 0 ? (
-            <div>
-              <h2 style={sectionHeaderStyle}>Paginated Results</h2>
-              <div className="row">{renderProductCards(currentProducts)}</div>
-            </div>
-          ) : (
-            <div className="col-12 text-center py-5">
-              <h3 className="text-muted">No products found in this category</h3>
-            </div>
-          )}
-          {/* Pagination Info & Controls */}
-          {totalPages > 1 && (
-            <div className="container my-5">
-              <div className="row">
-                <div className="col-12 d-flex flex-column align-items-center gap-4">
-                  <div className="text-center">
-                    <p className="text-muted mb-2">
-                      Showing <strong>{indexOfFirstProduct + 1}</strong> to
-                      <strong>
-                        {indexOfLastProduct > filteredProducts?.length
-                          ? filteredProducts?.length
-                          : indexOfLastProduct}
-                      </strong>
-                      of <strong>{filteredProducts?.length}</strong> products
-                    </p>
-                    {initialSelectedCategory && (
-                      <div className="d-flex align-items-center gap-3 flex-wrap justify-content-center">
-                        <div className="filter-badge">
-                          <i className="fas fa-filter me-2"></i>
-                          {selectedCategoryName || "Filtered by Category"}
-                        </div>
-                        {onClearFilter && (
-                          <button
-                            onClick={onClearFilter}
-                            className="btn btn-outline-danger btn-sm"
-                            style={{
-                              borderRadius: "20px",
-                              padding: "6px 16px",
-                              fontWeight: 600,
-                            }}
-                          >
-                            <i className="fas fa-times me-2"></i>
-                            Clear Filter
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  <div className="custom-pagination">
-                    <button
-                      className={`pagination-btn ${
-                        currentPage === 1 ? "disabled" : ""
-                      }`}
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                      aria-label="Previous"
-                    >
-                      <i className="fas fa-chevron-left"></i>
-                    </button>
-                    {[...Array(totalPages)].map((_, index) => {
-                      const page = index + 1;
-                      if (
-                        page === 1 ||
-                        page === totalPages ||
-                        (page >= currentPage - 1 && page <= currentPage + 1)
-                      ) {
-                        return (
-                          <button
-                            key={page}
-                            className={`pagination-btn ${
-                              currentPage === page ? "active" : ""
-                            }`}
-                            onClick={() => handlePageChange(page)}
-                          >
-                            {page}
-                          </button>
-                        );
-                      } else if (
-                        page === currentPage - 2 ||
-                        page === currentPage + 2
-                      ) {
-                        return (
-                          <span key={page} className="pagination-btn dots">
-                            ...
-                          </span>
-                        );
-                      }
-                      return null;
-                    })}
-                    <button
-                      className={`pagination-btn ${
-                        currentPage === totalPages ? "disabled" : ""
-                      }`}
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages}
-                      aria-label="Next"
-                    >
-                      <i className="fas fa-chevron-right"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+        <div className=" text-center my-5">
+          <Link to={"/allproducts"}>
+            <button className="btn bg-main text-white px-5 py-2">
+              View All Products
+            </button>
+          </Link>
         </div>
+        <hr />
       </div>
     </>
   );

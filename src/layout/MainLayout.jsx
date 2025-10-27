@@ -18,6 +18,7 @@ import WishList from "../pages/WishList";
 import Categories from "../pages/Categories";
 import CategoryProducts from "../pages/CategoryProducts";
 import AllOrders from "../pages/AllOrders";
+import AllProducts from "../pages/AllProducts";
 
 let router = createBrowserRouter([
   {
@@ -42,7 +43,7 @@ let router = createBrowserRouter([
         path: "/products",
         element: (
           <ProtectedRoute>
-            <ProductsPage />
+            <AllProducts />
           </ProtectedRoute>
         ),
       },
@@ -111,6 +112,15 @@ let router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "/allproducts",
+        element: (
+          <ProtectedRoute>
+            <AllProducts />
+          </ProtectedRoute>
+        ),
+      },
+
       {
         path: "/allorders",
         element: (
